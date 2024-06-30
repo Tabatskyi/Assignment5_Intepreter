@@ -1,6 +1,0 @@
-#include "Operator.h"
-
-Operator() 
-{
-
-}

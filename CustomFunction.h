@@ -3,9 +3,10 @@
 class CustomFunction : public Function
 {
 public:
-	CustomFunction();
+	CustomFunction(char* name);
 	~CustomFunction();
 	double Execute(Function* funcsArray);
 private:
+	char* name;
 };
 

@@ -127,15 +127,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Add.cpp" />
     <ClCompile Include="CustomFunction.cpp" />
     <ClCompile Include="Function.cpp" />
-    <ClCompile Include="Operator.cpp" />
+    <ClCompile Include="Multiply.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Add.h" />
     <ClInclude Include="CustomFunction.h" />
     <ClInclude Include="Function.h" />
-    <ClInclude Include="Operator.h" />
+    <ClInclude Include="Multiply.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
