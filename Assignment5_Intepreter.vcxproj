@@ -127,17 +127,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Abs.cpp" />
     <ClCompile Include="Add.cpp" />
     <ClCompile Include="CustomFunction.cpp" />
     <ClCompile Include="Function.cpp" />
+    <ClCompile Include="Max.cpp" />
+    <ClCompile Include="Min.cpp" />
     <ClCompile Include="Multiply.cpp" />
+    <ClCompile Include="Pow.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Abs.h" />
     <ClInclude Include="Add.h" />
     <ClInclude Include="CustomFunction.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="Max.h" />
+    <ClInclude Include="Min.h" />
     <ClInclude Include="Multiply.h" />
+    <ClInclude Include="Pow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
