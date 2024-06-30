@@ -1,5 +1,5 @@
 #pragma once
-#include "Operator.h"
+#include "Function.h"
 class CustomFunction : public Function
 {
 public:

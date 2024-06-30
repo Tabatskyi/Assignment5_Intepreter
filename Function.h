@@ -4,7 +4,7 @@ class Function
 public:
 	Function();
 	~Function();
-	double Execute(double x, double y,);
+	double Execute(int x, int y,);
 private:
 };
 
