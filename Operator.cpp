@@ -1,0 +1,6 @@
+#include "Operator.h"
+
+Operator() 
+{
+
+}
