@@ -135,6 +135,7 @@
     <ClCompile Include="Multiply.cpp" />
     <ClCompile Include="Pow.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="SyntaxHolder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Abs.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Min.h" />
     <ClInclude Include="Multiply.h" />
     <ClInclude Include="Pow.h" />
+    <ClInclude Include="SyntaxHolder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
