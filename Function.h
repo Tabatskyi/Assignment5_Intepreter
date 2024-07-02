@@ -2,9 +2,9 @@
 class Function
 {
 public:
-	Function();
-	~Function();
-	double Execute(int x, int y,);
-private:
+	~Function() = default;
+	virtual double Execute(int x) = 0;	
+	virtual double Execute(int x, int y) = 0;
+	virtual double Execute(Function* funcsArray) = 0;
 };
 

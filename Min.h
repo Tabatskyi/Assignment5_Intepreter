@@ -5,6 +5,6 @@ class Min : public Function
 public:
 	Min();
 	~Min();
-	double Execute(int x, int y)
+	double Execute(int x, int y);
 };
 

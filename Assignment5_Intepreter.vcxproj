@@ -130,7 +130,6 @@
     <ClCompile Include="Abs.cpp" />
     <ClCompile Include="Add.cpp" />
     <ClCompile Include="CustomFunction.cpp" />
-    <ClCompile Include="Function.cpp" />
     <ClCompile Include="Max.cpp" />
     <ClCompile Include="Min.cpp" />
     <ClCompile Include="Multiply.cpp" />

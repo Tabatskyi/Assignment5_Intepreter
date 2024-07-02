@@ -5,6 +5,6 @@ class Abs : public Function
 public:
 	Abs();
 	~Abs();
-	double Execute(int x, int y);
+	double Execute(int x);
 };
 

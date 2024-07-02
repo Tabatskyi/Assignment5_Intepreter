@@ -5,7 +5,7 @@ Max::~Max() {}
 
 double Max::Execute(int x, int y) 
 {
-	if x >= y
+	if (x >= y)
 		return x;
 	else
 		return y;
