@@ -138,6 +138,7 @@
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Substract.cpp" />
     <ClCompile Include="SyntaxHolder.cpp" />
+    <ClCompile Include="Variable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Abs.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Pow.h" />
     <ClInclude Include="Substract.h" />
     <ClInclude Include="SyntaxHolder.h" />
+    <ClInclude Include="Variable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
