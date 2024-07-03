@@ -1,14 +1,40 @@
 #include <iostream>
-#include "Add.h"
-#include "Max.h"
-#include "Min.h"
-#include "Abs.h"
-#include "Pow.h"
-#include "Multiply.h"
+#include <string>
+#include <vector>
+#include <sstream>
+
+#include "SyntaxHolder.h"
 #include "CustomFunction.h"
 
+using namespace std;
+
+static vector<string> splitString(const string& inputString)
+{
+    SyntaxHolder syntaxHolder;
+    vector<string> result;
+    istringstream iss(inputString);
+    string word;
+    
+    while (iss >> word)
+    {
+        result.push_back(word);
+    }
+    
+    return result;
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    string inputString;
+    getline(std::cin, inputString);
+    
+    vector<string> words = splitString(inputString);
+    
+    
+    for (const string& word : words)
+    {
+        cout << word << endl;
+    }
+    
+    return 0;
 }

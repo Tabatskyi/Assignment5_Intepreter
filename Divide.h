@@ -1,10 +1,10 @@
 #pragma once
 #include "Function.h"
-class Pow : public Function
+class Divide : public Function
 {
 public:
-	Pow();
-	~Pow();
+	Divide();
+	~Divide();
 	double Execute(int x) override {};
 	double Execute(int x, int y) override;
 	double Execute(Function* funcsArray) override {};

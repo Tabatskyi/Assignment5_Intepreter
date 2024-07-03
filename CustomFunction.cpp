@@ -5,10 +5,6 @@ CustomFunction::CustomFunction(char* name)
 	this->name = name;
 }
 
-CustomFunction::~CustomFunction()
-{
-}
-
 char* CustomFunction::GetName()
 {
 	return name;

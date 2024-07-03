@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include <array>
+#include <map>
 
 using namespace std;
 
@@ -13,6 +13,6 @@ public:
 
 	string functionDefinition;
 	string variableDefinition;
-	array<string, 4> reservedFunctionNames;
+	map<string, unique_ptr<Function>> functionToClassMap;
 };
 

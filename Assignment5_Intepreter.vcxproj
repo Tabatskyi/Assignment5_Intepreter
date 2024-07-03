@@ -130,22 +130,26 @@
     <ClCompile Include="Abs.cpp" />
     <ClCompile Include="Add.cpp" />
     <ClCompile Include="CustomFunction.cpp" />
+    <ClCompile Include="Divide.cpp" />
     <ClCompile Include="Max.cpp" />
     <ClCompile Include="Min.cpp" />
     <ClCompile Include="Multiply.cpp" />
     <ClCompile Include="Pow.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="Substract.cpp" />
     <ClCompile Include="SyntaxHolder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Abs.h" />
     <ClInclude Include="Add.h" />
     <ClInclude Include="CustomFunction.h" />
+    <ClInclude Include="Divide.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Max.h" />
     <ClInclude Include="Min.h" />
     <ClInclude Include="Multiply.h" />
     <ClInclude Include="Pow.h" />
+    <ClInclude Include="Substract.h" />
     <ClInclude Include="SyntaxHolder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
