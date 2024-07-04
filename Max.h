@@ -5,8 +5,8 @@ class Max : public Function
 public:
 	Max();
 	~Max();
-	double Execute(int x) {};
-	double Execute(int x, int y);
-	double Execute(Function* funcsArray) {};
+	double Execute() override { throw "Wrong arguments count"; };
+	double Execute(int x) override { throw "Wrong arguments count"; };
+	double Execute(int x, int y) override;
 };
 

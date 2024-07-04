@@ -5,8 +5,8 @@ class Min : public Function
 public:
 	Min();
 	~Min();
-	double Execute(int x) override {};
+	double Execute() override { throw "Wrong arguments count"; };
+	double Execute(int x) override { throw "Wrong arguments count"; };
 	double Execute(int x, int y) override;
-	double Execute(Function* funcsArray) override {};
 };
 

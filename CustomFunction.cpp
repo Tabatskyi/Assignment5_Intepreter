@@ -15,8 +15,17 @@ void CustomFunction::SetName(char* name)
 	this->name = name;
 }
 
-double CustomFunction::Execute(Function* funcsArray)
+double CustomFunction::Execute()
 {
 	return 0;
 }
 
+void CustomFunction::AddArgument(Variable* arg)
+{
+	arguments.push_back(arg);
+}
+
+void CustomFunction::AddFunction(Function* func)
+{
+	functions.push_back(func);
+}
