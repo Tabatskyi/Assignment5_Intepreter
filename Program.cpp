@@ -8,6 +8,7 @@
 
 using namespace std;
 
+
 static vector<string> splitString(const string& inputString)
 {
     SyntaxHolder syntaxHolder;
@@ -30,11 +31,16 @@ int main()
     
     vector<string> words = splitString(inputString);
     
+    CustomFunction customFunction("test");
+
+    customFunction.AddFunctionArgument(new Add(), make_tuple(new Variable("x", 6), new Variable("y", 10)));
     
     for (const string& word : words)
     {
         cout << word << endl;
     }
     
+    cout << customFunction.Execute() << endl;
+
     return 0;
 }
