@@ -37,33 +37,44 @@ static bool isNumber(const string& str)
     return !str.empty() && str.find_first_not_of("0123456789.-") == string::npos;
 }
 
-vector<string> tokenize(const string& input)
+static vector<string> tokenize(const string& input)
 {
     vector<string> tokens;
     string token;
-    for (char ch : input) {
-        if (isspace(ch)) {
-            if (!token.empty()) {
+    for (char ch : input)
+    {
+        if (isspace(ch))
+        {
+            if (!token.empty())
+            {
                 tokens.push_back(token);
                 token.clear();
             }
         }
-        else if (isdigit(ch) || ch == '.' || (ch == '-' && token.empty())) {
+        else if (isdigit(ch) || ch == '.' || (ch == '-' && token.empty()))
+        {
             token += ch;
         }
-        else {
-            if (!token.empty()) {
+        else
+        {
+            if (!token.empty() && isNumber(token))
+            {
                 tokens.push_back(token);
                 token.clear();
             }
             token += ch;
-            if (ch != '(' && ch != ')') {
-                tokens.push_back(token);
-                token.clear();
+            if (ch == '(' || ch == ')')
+            {
+                if (!token.empty())
+                {
+                    tokens.push_back(token);
+                    token.clear();
+                }
             }
         }
     }
-    if (!token.empty()) {
+    if (!token.empty())
+    {
         tokens.push_back(token);
     }
     return tokens;
@@ -90,7 +101,8 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
             {
                 string op = ops.top();
                 ops.pop();
-                if (syntaxHolder.functionToClassMap.find(op) != syntaxHolder.functionToClassMap.end()) {
+                if (syntaxHolder.functionToClassMap.find(op) != syntaxHolder.functionToClassMap.end()) 
+                {
                     double result = 0;
                     if (op == "abs") 
                     {
@@ -108,7 +120,6 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
                     values.push(result);
                 }
             }
-            ops.pop();
         }
         else if (syntaxHolder.functionToClassMap.find(token) != syntaxHolder.functionToClassMap.end())
         {
