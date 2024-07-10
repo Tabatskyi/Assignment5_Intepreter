@@ -41,44 +41,76 @@ static vector<string> tokenize(const string& input)
 {
     vector<string> tokens;
     string token;
-    for (char ch : input)
+    bool isFunctionName = false;
+
+    for (size_t i = 0; i < input.length(); ++i) 
     {
-        if (isspace(ch))
+        char ch = input[i];
+        if (isspace(ch)) 
         {
-            if (!token.empty())
+            if (!token.empty()) 
             {
                 tokens.push_back(token);
                 token.clear();
             }
+            isFunctionName = false;
         }
-        else if (isdigit(ch) || ch == '.' || (ch == '-' && token.empty()))
+        else if (isdigit(ch) || ch == '.' || (ch == '-' && token.empty())) 
         {
+            if (isFunctionName) 
+            {
+                tokens.push_back(token);
+                token.clear();
+                isFunctionName = false;
+            }
             token += ch;
         }
-        else
+        else if (isalpha(ch)) 
         {
-            if (!token.empty() && isNumber(token))
+            if (!isFunctionName && !token.empty()) 
             {
                 tokens.push_back(token);
                 token.clear();
             }
             token += ch;
-            if (ch == '(' || ch == ')')
+            isFunctionName = true;
+        }
+        else if (ch == '(') 
+        {
+            if (isFunctionName) 
             {
-                if (!token.empty())
-                {
-                    tokens.push_back(token);
-                    token.clear();
-                }
+                tokens.push_back(token);
+                token.clear();
             }
+            tokens.push_back(string(1, ch));
+            isFunctionName = false;
+        }
+        else if (ch == ')') 
+        {
+            if (!token.empty()) 
+            {
+                tokens.push_back(token);
+                token.clear();
+            }
+            tokens.push_back(string(1, ch));
+        }
+        else 
+        {
+            if (!token.empty()) 
+            {
+                tokens.push_back(token);
+                token.clear();
+            }
+            token += ch;
         }
     }
-    if (!token.empty())
+    if (!token.empty()) 
     {
         tokens.push_back(token);
     }
     return tokens;
 }
+
 
 static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syntaxHolder)
 {
@@ -90,36 +122,6 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
         if (isNumber(token))
         {
             values.push(stod(token));
-        }
-        else if (token == "(")
-        {
-            ops.push(token);
-        }
-        else if (token == ")")
-        {
-            while (!ops.empty() && ops.top() != "(")
-            {
-                string op = ops.top();
-                ops.pop();
-                if (syntaxHolder.functionToClassMap.find(op) != syntaxHolder.functionToClassMap.end()) 
-                {
-                    double result = 0;
-                    if (op == "abs") 
-                    {
-                        double val = values.top(); values.pop();
-                        result = syntaxHolder.functionToClassMap[op]->Execute(val);
-                    }
-                    else 
-                    {
-                        double val2 = values.top(); 
-                        values.pop();
-                        double val1 = values.top(); 
-                        values.pop();
-                        result = syntaxHolder.functionToClassMap[op]->Execute(val1, val2);
-                    }
-                    values.push(result);
-                }
-            }
         }
         else if (syntaxHolder.functionToClassMap.find(token) != syntaxHolder.functionToClassMap.end())
         {
@@ -142,6 +144,13 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
     {
         string op = ops.top();
         ops.pop();
+        if (op == "abs")
+        {
+			double val = values.top();
+			values.pop();
+			values.push(syntaxHolder.functionToClassMap[op]->Execute(val));
+			continue;
+        }
         double val2 = values.top(); 
         values.pop();
         double val1 = values.top(); 
