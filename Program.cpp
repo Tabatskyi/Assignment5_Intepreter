@@ -1,10 +1,13 @@
+#include <iostream>
 #include <string>
 #include <vector>
 #include <sstream>
-#include <functional>
+#include <memory>
+#include <stack>
 
 #include "SyntaxHolder.h"
 #include "CustomFunction.h"
+#include "Variable.h"
 
 using namespace std;
 
@@ -13,7 +16,7 @@ static vector<string> splitString(const string& input, char delimiter)
     vector<string> result;
     stringstream ss(input);
     string token;
-    while (getline(ss, token, delimiter)) 
+    while (getline(ss, token, delimiter))
     {
         result.push_back(token);
     }
@@ -24,46 +27,77 @@ static string trim(const string& str)
 {
     size_t first = str.find_first_not_of(' ');
     size_t last = str.find_last_not_of(' ');
+    if (first == string::npos || last == string::npos)
+        return "";
     return str.substr(first, (last - first + 1));
+}
+
+static bool isNumber(const string& str)
+{
+    return !str.empty() && str.find_first_not_of("0123456789.-") == string::npos;
+}
+
+double evaluateExpression(const string& expr, SyntaxHolder& syntaxHolder)
+{
+    vector<string> tokens = splitString(expr, ' ');
+    stack<double> values;
+    stack<shared_ptr<Function>> ops;
+
+    for (auto& token : tokens)
+    {
+        token = trim(token);
+        if (isNumber(token))
+        {
+            values.push(stod(token));
+        }
+        else
+        {
+            while (!ops.empty() && syntaxHolder.priority(ops.top()) >= syntaxHolder.priority(syntaxHolder.functionToClassMap[token]))
+            {
+                double val2 = values.top(); values.pop();
+                double val1 = values.top(); values.pop();
+                auto op = ops.top(); ops.pop();
+
+                values.push(op->Execute(val1, val2));
+            }
+            ops.push(syntaxHolder.functionToClassMap[token]);
+        }
+    }
+
+    while (!ops.empty())
+    {
+        double val2 = values.top(); values.pop();
+        double val1 = values.top(); values.pop();
+        auto op = ops.top(); ops.pop();
+
+        values.push(op->Execute(val1, val2));
+    }
+
+    return values.top();
 }
 
 int main()
 {
     SyntaxHolder syntaxHolder;
     string inputString;
-    std::cout << ": ";
-    getline(cin, inputString);
 
-    vector<string> parts = splitString(inputString, ':');
-    if (parts.size() != 2) 
+    while (true)
     {
-        cerr << "Invalid function format.";
-        return 1;
+        cout << "> ";
+        getline(cin, inputString);
+        if (inputString == "exit")
+            break;
+
+        try
+        {
+            double result = evaluateExpression(inputString, syntaxHolder);
+            cout << "< " << result << endl;
+        }
+        catch (const exception& e)
+        {
+            cerr << "Error: " << e.what() << endl;
+        }
     }
-
-    string signature = trim(parts[0]);
-    string expression = trim(parts[1]);
-
-    parts = splitString(signature, '(');
-    string functionName = trim(parts[0]);
-    string params = trim(parts[1]);
-    params.pop_back();
-
-    vector<string> parameters = splitString(params, ','); 
-    vector<Variable*> args;
-
-    int dummyValue = 1;
-    for (const string& param : parameters) 
-    {
-        args.push_back(new Variable(trim(param), dummyValue++));
-    }
-
-    CustomFunction customFunction(functionName);
-
-    customFunction.AddFunctionArgument(syntaxHolder.functionToClassMap["min"], { args[0], args[1] });
-    customFunction.AddFunctionArgument(syntaxHolder.functionToClassMap["+"], { args[1], new Variable(customFunction.GetName(), customFunction.Execute())});
-
-    std::cout << customFunction.Execute() << endl;
 
     return 0;
 }
