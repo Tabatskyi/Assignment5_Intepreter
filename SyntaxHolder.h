@@ -22,6 +22,6 @@ public:
 
 	string functionDefinition;
 	string variableDefinition;
-	map<string, unique_ptr<Function>> functionToClassMap;
+	map<string, shared_ptr<Function>> functionToClassMap;
 };
 

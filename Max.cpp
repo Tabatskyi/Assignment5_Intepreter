@@ -3,7 +3,7 @@
 Max::Max() {}
 Max::~Max() {}
 
-double Max::Execute(int x, int y) 
+double Max::Execute(double x, double y)
 {
 	if (x >= y)
 		return x;

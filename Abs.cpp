@@ -3,7 +3,7 @@
 Abs::Abs() {}
 Abs::~Abs() {}
 
-double Abs::Execute(int x)
+double Abs::Execute(double x)
 {
 	if (x < 0)
 		return -x;

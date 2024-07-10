@@ -3,7 +3,7 @@
 Multiply::Multiply() {}
 Multiply::~Multiply() {}
 
-double Multiply::Execute(int x, int y)
+double Multiply::Execute(double x, double y)
 {
 	return x * y;
 }

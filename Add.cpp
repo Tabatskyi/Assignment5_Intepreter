@@ -3,7 +3,7 @@
 Add::Add() {}
 Add::~Add() {}
 
-double Add::Execute(int x, int y) 
+double Add::Execute(double x, double y)
 {
 	return x + y;
 }

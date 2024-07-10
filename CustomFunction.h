@@ -3,27 +3,28 @@
 #include "Variable.h"
 #include <vector>
 #include <map>
+#include <iostream>
 
 using namespace std;
 class CustomFunction : public Function
 {
 public:
-	CustomFunction(const char* name);
+	CustomFunction(string name);
 	~CustomFunction();
 
 	double Execute() override;
-	double Execute(int x) override { throw "Wrong arguments count"; };
-	double Execute(int x, int y) override { throw "Wrong arguments count"; };
+	double Execute(double x) override { throw "Wrong arguments count"; };
+	double Execute(double x, double y) override { throw "Wrong arguments count"; };
 
-	const char* GetName();
+	string GetName();
 
 	void AddArgument(Variable* arg);
-	void AddFunction(Function* func);
-	void AddFunctionArgument(Function* func, tuple<Variable*, Variable*> arg);
+	void AddFunction(shared_ptr<Function> func);
+	void AddFunctionArgument(shared_ptr<Function> func, tuple<Variable*, Variable*> arg);
 private:
-	const char* name;
-	vector<Function*> functions;
+	string name;
+	vector<shared_ptr<Function>> functions;
 	vector<Variable*> arguments;
-	map<Function*, tuple<Variable*, Variable*>> functionArguments;
+	map<shared_ptr<Function>, tuple<Variable*, Variable*>> functionArguments;
 };
 

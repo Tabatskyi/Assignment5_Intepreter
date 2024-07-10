@@ -3,7 +3,7 @@
 Pow::Pow() {}
 Pow::~Pow() {}
 
-double Pow::Execute(int x, int y)
+double Pow::Execute(double x, double y)
 {
 	for (int i = 0; i < y; i++)
 	{

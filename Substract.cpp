@@ -3,7 +3,7 @@
 Substract::Substract() {}
 Substract::~Substract() {}
 
-double Substract::Execute(int x, int y)
+double Substract::Execute(double x, double y)
 {
 	return x - y;
 }

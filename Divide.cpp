@@ -3,7 +3,7 @@
 Divide::Divide() {}
 Divide::~Divide() {}
 
-double Divide::Execute(int x, int y)
+double Divide::Execute(double x, double y)
 {
 	return x / y;
 }
