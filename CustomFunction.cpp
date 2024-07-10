@@ -33,9 +33,26 @@ double CustomFunction::Execute()
 	return result;
 }
 
+int CustomFunction::CheckArguments(vector<Variable*> arguments, Variable* target)
+{
+	if (find(arguments.begin(), arguments.end(), target) != arguments.end())
+	{
+		return distance(arguments.begin(), find(arguments.begin(), arguments.end(), target));
+	}
+	return -1;
+}
+
 void CustomFunction::AddArgument(Variable* arg)
 {
-	arguments.push_back(arg);
+	int index = CheckArguments(arguments, arg);
+	if (index >= 0)
+	{
+		arguments[index] = arg;
+	}
+	else
+	{
+		arguments.push_back(arg);
+	}
 }
 
 void CustomFunction::AddFunction(shared_ptr<Function> func)

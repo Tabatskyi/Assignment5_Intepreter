@@ -31,7 +31,7 @@ int main()
 {
     SyntaxHolder syntaxHolder;
     string inputString;
-    cout << ": ";
+    std::cout << ": ";
     getline(cin, inputString);
 
     vector<string> parts = splitString(inputString, ':');
@@ -49,7 +49,7 @@ int main()
     string params = trim(parts[1]);
     params.pop_back();
 
-    vector<string> parameters = splitString(params, ',');
+    vector<string> parameters = splitString(params, ','); 
     vector<Variable*> args;
 
     int dummyValue = 1;
@@ -61,9 +61,9 @@ int main()
     CustomFunction customFunction(functionName);
 
     customFunction.AddFunctionArgument(syntaxHolder.functionToClassMap["min"], { args[0], args[1] });
-    customFunction.AddFunctionArgument(syntaxHolder.functionToClassMap["+"], { args[1], new Variable("", customFunction.Execute()) });
+    customFunction.AddFunctionArgument(syntaxHolder.functionToClassMap["+"], { args[1], new Variable(customFunction.GetName(), customFunction.Execute())});
 
-    cout << customFunction.Execute() << endl;
+    std::cout << customFunction.Execute() << endl;
 
     return 0;
 }

@@ -22,6 +22,7 @@ public:
 	void AddFunction(shared_ptr<Function> func);
 	void AddFunctionArgument(shared_ptr<Function> func, tuple<Variable*, Variable*> arg);
 private:
+	static int CheckArguments(vector<Variable*> arguments, Variable* target);
 	string name;
 	vector<shared_ptr<Function>> functions;
 	vector<Variable*> arguments;
