@@ -24,4 +24,11 @@ SyntaxHolder::SyntaxHolder()
 	priority["-"] = 1;
 	priority["*"] = 2;
 	priority["/"] = 2;
+
+	reservedWords.insert({ "abs", "min", "max", "pow", "+", "-", "*", "/", "(", ")", functionDefinition, variableDefinition });
 };
+
+bool SyntaxHolder::isReserved(const std::string& word) const
+{
+	return reservedWords.find(word) != reservedWords.end();
+}

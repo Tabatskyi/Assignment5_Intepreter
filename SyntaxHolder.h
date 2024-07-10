@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <set>
 
 #include "Add.h"
 #include "Max.h"
@@ -24,4 +25,7 @@ public:
 	string variableDefinition;
 	map<string, shared_ptr<Function>> functionsMap;
 	map<string, int> priority;
+	set<std::string> reservedWords;
+
+	bool isReserved(const std::string& word) const;
 };
