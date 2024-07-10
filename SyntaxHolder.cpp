@@ -5,25 +5,23 @@ SyntaxHolder::SyntaxHolder()
 	functionDefinition = "fun";
 	variableDefinition = "var";
 
-	functionToClassMap["abs"] = make_shared<Abs>();
-	functionToClassMap["min"] = make_shared<Min>();
-	functionToClassMap["max"] = make_shared<Max>();
-	functionToClassMap["pow"] = make_shared<Pow>();
+	functionsMap["abs"] = make_shared<Abs>();
+	functionsMap["min"] = make_shared<Min>();
+	functionsMap["max"] = make_shared<Max>();
+	functionsMap["pow"] = make_shared<Pow>();
 
-	functionToClassMap["+"] = make_shared<Add>();
-	functionToClassMap["-"] = make_shared<Substract>();
-	functionToClassMap["*"] = make_shared<Multiply>();
-	functionToClassMap["/"] = make_shared<Divide>();
+	functionsMap["+"] = make_shared<Add>();
+	functionsMap["-"] = make_shared<Substract>();
+	functionsMap["*"] = make_shared<Multiply>();
+	functionsMap["/"] = make_shared<Divide>();
+
+	priority["abs"] = 4;
+	priority["min"] = 3;
+	priority["max"] = 3;
+	priority["pow"] = 4;
+
+	priority["+"] = 1;
+	priority["-"] = 1;
+	priority["*"] = 2;
+	priority["/"] = 2;
 };
-
-int SyntaxHolder::priority(const shared_ptr<Function>& func)
-{
-	if (dynamic_pointer_cast<Add>(func) || dynamic_pointer_cast<Substract>(func))
-		return 1;  
-	else if (dynamic_pointer_cast<Multiply>(func) || dynamic_pointer_cast<Divide>(func))
-		return 2; 
-	else if (dynamic_pointer_cast<Pow>(func))
-		return 3; 
-
-	return 0; 
-}

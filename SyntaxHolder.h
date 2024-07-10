@@ -22,7 +22,6 @@ public:
 
 	string functionDefinition;
 	string variableDefinition;
-	map<string, shared_ptr<Function>> functionToClassMap;
-
-	int priority(const shared_ptr<Function>& func);
+	map<string, shared_ptr<Function>> functionsMap;
+	map<string, int> priority;
 };
