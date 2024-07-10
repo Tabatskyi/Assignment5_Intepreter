@@ -5,6 +5,7 @@
 #include <memory>
 #include <stack>
 #include <map>
+#include <cctype>
 
 #include "SyntaxHolder.h"
 #include "CustomFunction.h"
@@ -50,7 +51,7 @@ static vector<string> tokenize(const string& input)
         }
         else if (isdigit(ch) || ch == '.' || (ch == '-' && token.empty()))
             token += ch;
-        
+
         else if (isalpha(ch) || ch == '_')
         {
             token += ch;
@@ -88,10 +89,23 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
             if (!isVariableName(varName, syntaxHolder))
                 throw runtime_error("Invalid variable name: " + varName);
 
-            i += 2;
-            variables[varName] = evaluateExpression(vector<string>(tokens.begin() + i + 1, tokens.end()), syntaxHolder, suppressOutput);
+            i += 2; // Skip 'var' and '='
+            double value = evaluateExpression(vector<string>(tokens.begin() + i + 1, tokens.end()), syntaxHolder, suppressOutput);
+            variables[varName] = value;
             suppressOutput = true;
-            return variables[varName];
+            return value;
+        }
+        else if (isVariableName(token, syntaxHolder) && i + 1 < tokens.size() && tokens[i + 1] == "=")
+        {
+            string varName = token;
+            if (!isVariableName(varName, syntaxHolder))
+                throw runtime_error("Invalid variable name: " + varName);
+
+            i += 1; // Skip '='
+            double value = evaluateExpression(vector<string>(tokens.begin() + i + 1, tokens.end()), syntaxHolder, suppressOutput);
+            variables[varName] = value;
+            suppressOutput = true;
+            return value;
         }
         else if (isNumber(token))
         {
@@ -106,7 +120,7 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
         }
         else if (token == "=")
             continue;
-        
+
         else if (token == "(")
         {
             ops.push(token);
