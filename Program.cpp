@@ -1,11 +1,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdexcept>
 #include <sstream>
 #include <memory>
 #include <stack>
 #include <map>
-#include <cctype>
 
 #include "SyntaxHolder.h"
 #include "CustomFunction.h"
@@ -14,6 +14,7 @@
 using namespace std;
 
 map<string, double> variables;
+map<string, CustomFunction> customFunctions;
 
 static bool isNumber(const string& str)
 {
@@ -83,7 +84,7 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
     {
         const string& token = tokens[i];
 
-        if (token == "var" && i + 2 < tokens.size() && tokens[i + 2] == "=")
+        if (token == syntaxHolder.variableDefinition && i + 2 < tokens.size() && tokens[i + 2] == "=")
         {
             string varName = tokens[i + 1];
             if (!isVariableName(varName, syntaxHolder))
@@ -106,6 +107,51 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
             variables[varName] = value;
             suppressOutput = true;
             return value;
+        }
+        else if (token == "fun" && i + 4 < tokens.size() && tokens[i + 2] == "(")
+        {
+            string functionName = tokens[i + 1];
+            vector<string> args;
+            size_t j = i + 3;
+            while (j < tokens.size() && tokens[j] != ")")
+            {
+                if (isVariableName(tokens[j], syntaxHolder))
+                    args.push_back(tokens[j]);
+                j++;
+            }
+            if (j >= tokens.size() || tokens[j] != ")")
+                throw runtime_error("Invalid function declaration");
+
+            vector<string> body(tokens.begin() + j + 1, tokens.end());
+            CustomFunction customFunc(functionName); 
+            customFunc.SetArguments(args);
+            customFunc.SetBody(body);
+            customFunctions.emplace(functionName, std::move(customFunc)); 
+            suppressOutput = true;
+            return 0;
+        }
+        else if (customFunctions.find(token) != customFunctions.end())
+        {
+            CustomFunction& customFunc = customFunctions[token];
+            vector<double> args;
+            size_t j = i + 1;
+            if (tokens[j] != "(")
+                throw runtime_error("Invalid function call syntax");
+
+            while (j < tokens.size() && tokens[j] != ")")
+            {
+                if (isNumber(tokens[j]))
+                    args.push_back(stod(tokens[j]));
+                else if (variables.find(tokens[j]) != variables.end())
+                    args.push_back(variables[tokens[j]]);
+                j++;
+            }
+            if (j >= tokens.size() || tokens[j] != ")")
+                throw runtime_error("Invalid function call syntax");
+
+            double result = customFunc.Execute(args);
+            values.push(result);
+            i = j;
         }
         else if (isNumber(token))
         {
@@ -198,7 +244,102 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
         }
     }
 
-    return values.top();
+    if (!values.empty())
+        return values.top();
+    else
+        throw runtime_error("Expression evaluation resulted in no value");
+}
+
+CustomFunction::CustomFunction(string name)
+{
+    this->name = name;
+}
+
+CustomFunction::~CustomFunction()
+{
+    for (Variable* argument : arguments)
+    {
+        delete argument;
+    }
+}
+
+string CustomFunction::GetName()
+{
+    return name;
+}
+
+void CustomFunction::SetArguments(vector<string> args)
+{
+    this->argumentNames = args;
+    for (const auto& argName : args)
+    {
+        arguments.push_back(new Variable(argName, 0));
+    }
+}
+
+void CustomFunction::SetBody(vector<string> body)
+{
+    this->body = body;
+}
+
+double CustomFunction::Execute(vector<double> args)
+{
+    if (args.size() != arguments.size())
+    {
+        throw std::runtime_error("Incorrect number of arguments provided for function " + name);
+    }
+
+    for (size_t i = 0; i < args.size(); ++i)
+    {
+        arguments[i]->setValue(args[i]);
+    }
+
+    SyntaxHolder syntaxHolder;
+    vector<string> bodyTokens;
+    for (const auto& line : body)
+    {
+        vector<string> tokens = tokenize(line);
+        bodyTokens.insert(bodyTokens.end(), tokens.begin(), tokens.end());
+    }
+
+    bool suppressOutput = false;
+    return evaluateExpression(bodyTokens, syntaxHolder, suppressOutput);
+}
+
+int CustomFunction::CheckArguments(vector<Variable*> arguments, Variable* target)
+{
+    auto it = std::find(arguments.begin(), arguments.end(), target);
+    if (it != arguments.end())
+    {
+        return std::distance(arguments.begin(), it);
+    }
+    return -1;
+}
+
+void CustomFunction::AddArgument(Variable* arg)
+{
+    int index = CheckArguments(arguments, arg);
+    if (index >= 0)
+    {
+        arguments[index] = arg;
+    }
+    else
+    {
+        arguments.push_back(arg);
+    }
+}
+
+void CustomFunction::AddFunction(shared_ptr<Function> func)
+{
+    functions.push_back(func);
+}
+
+void CustomFunction::AddFunctionArgument(shared_ptr<Function> func, tuple<Variable*, Variable*> args)
+{
+    functionArguments[func] = args;
+    AddArgument(std::get<0>(args));
+    AddArgument(std::get<1>(args));
+    AddFunction(func);
 }
 
 int main()
