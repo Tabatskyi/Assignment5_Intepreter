@@ -1,8 +1,5 @@
 #include "Abs.h"
 
-Abs::Abs() {}
-Abs::~Abs() {}
-
 double Abs::Execute(double x)
 {
 	if (x < 0)
@@ -11,5 +8,7 @@ double Abs::Execute(double x)
 		return x;
 }
 
-
-
+string Abs::GetName()
+{
+	return "abs";
+}

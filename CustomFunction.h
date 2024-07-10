@@ -28,4 +28,3 @@ private:
 	vector<Variable*> arguments;
 	map<shared_ptr<Function>, tuple<Variable*, Variable*>> functionArguments;
 };
-

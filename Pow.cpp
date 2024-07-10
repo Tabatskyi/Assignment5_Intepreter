@@ -1,8 +1,5 @@
 #include "Pow.h"
 
-Pow::Pow() {}
-Pow::~Pow() {}
-
 double Pow::Execute(double x, double y)
 {
 	for (int i = 0; i < y; i++)
@@ -10,4 +7,9 @@ double Pow::Execute(double x, double y)
 		x *= x;
 	}
 	return x;
+}
+
+string Pow::GetName()
+{
+	return "pow";
 }

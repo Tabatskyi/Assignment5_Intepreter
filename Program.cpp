@@ -37,40 +37,105 @@ static bool isNumber(const string& str)
     return !str.empty() && str.find_first_not_of("0123456789.-") == string::npos;
 }
 
-double evaluateExpression(const string& expr, SyntaxHolder& syntaxHolder)
+vector<string> tokenize(const string& input)
 {
-    vector<string> tokens = splitString(expr, ' ');
-    stack<double> values;
-    stack<shared_ptr<Function>> ops;
+    vector<string> tokens;
+    string token;
+    for (char ch : input) {
+        if (isspace(ch)) {
+            if (!token.empty()) {
+                tokens.push_back(token);
+                token.clear();
+            }
+        }
+        else if (isdigit(ch) || ch == '.' || (ch == '-' && token.empty())) {
+            token += ch;
+        }
+        else {
+            if (!token.empty()) {
+                tokens.push_back(token);
+                token.clear();
+            }
+            token += ch;
+            if (ch != '(' && ch != ')') {
+                tokens.push_back(token);
+                token.clear();
+            }
+        }
+    }
+    if (!token.empty()) {
+        tokens.push_back(token);
+    }
+    return tokens;
+}
 
-    for (auto& token : tokens)
+static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syntaxHolder)
+{
+    stack<double> values;
+    stack<string> ops;
+
+    for (const string& token : tokens)
     {
-        token = trim(token);
         if (isNumber(token))
         {
             values.push(stod(token));
         }
-        else
+        else if (token == "(")
         {
-            while (!ops.empty() && syntaxHolder.priority(ops.top()) >= syntaxHolder.priority(syntaxHolder.functionToClassMap[token]))
+            ops.push(token);
+        }
+        else if (token == ")")
+        {
+            while (!ops.empty() && ops.top() != "(")
             {
-                double val2 = values.top(); values.pop();
-                double val1 = values.top(); values.pop();
-                auto op = ops.top(); ops.pop();
-
-                values.push(op->Execute(val1, val2));
+                string op = ops.top();
+                ops.pop();
+                if (syntaxHolder.functionToClassMap.find(op) != syntaxHolder.functionToClassMap.end()) {
+                    double result = 0;
+                    if (op == "abs") 
+                    {
+                        double val = values.top(); values.pop();
+                        result = syntaxHolder.functionToClassMap[op]->Execute(val);
+                    }
+                    else 
+                    {
+                        double val2 = values.top(); 
+                        values.pop();
+                        double val1 = values.top(); 
+                        values.pop();
+                        result = syntaxHolder.functionToClassMap[op]->Execute(val1, val2);
+                    }
+                    values.push(result);
+                }
             }
-            ops.push(syntaxHolder.functionToClassMap[token]);
+            ops.pop();
+        }
+        else if (syntaxHolder.functionToClassMap.find(token) != syntaxHolder.functionToClassMap.end())
+        {
+            while (!ops.empty() && syntaxHolder.priority(syntaxHolder.functionToClassMap[ops.top()]) >= syntaxHolder.priority(syntaxHolder.functionToClassMap[token]))
+            {
+                double val2 = values.top(); 
+                values.pop();
+                double val1 = values.top(); 
+                values.pop();
+                auto& op = ops.top();
+                ops.pop();
+
+                values.push(syntaxHolder.functionToClassMap[op]->Execute(val1, val2));
+            }
+            ops.push(token);
         }
     }
 
     while (!ops.empty())
     {
-        double val2 = values.top(); values.pop();
-        double val1 = values.top(); values.pop();
-        auto op = ops.top(); ops.pop();
-
-        values.push(op->Execute(val1, val2));
+        string op = ops.top();
+        ops.pop();
+        double val2 = values.top(); 
+        values.pop();
+        double val1 = values.top(); 
+        values.pop();
+        values.push(syntaxHolder.functionToClassMap[op]->Execute(val1, val2));
     }
 
     return values.top();
@@ -88,9 +153,10 @@ int main()
         if (inputString == "exit")
             break;
 
+        vector<string> tokens = tokenize(inputString);
         try
         {
-            double result = evaluateExpression(inputString, syntaxHolder);
+            double result = evaluateExpression(tokens, syntaxHolder);
             cout << "< " << result << endl;
         }
         catch (const exception& e)

@@ -12,7 +12,7 @@ string Variable::getName()
 {
 	return name;
 }
-double Variable::getValue()
+double Variable::getValue() const
 {
 	return value;
 }

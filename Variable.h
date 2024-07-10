@@ -10,11 +10,10 @@ public:
 	~Variable();
 
 	string getName();
-	double getValue();
+	double getValue() const;
 
 	void setValue(double val);
 private:
 	string name;
 	double value;
 };
-

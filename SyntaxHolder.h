@@ -26,4 +26,3 @@ public:
 
 	int priority(const shared_ptr<Function>& func);
 };
-
