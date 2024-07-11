@@ -5,7 +5,6 @@
 #include <memory>
 #include <stack>
 #include <map>
-#include <cctype>
 
 #include "SyntaxHolder.h"
 #include "CustomFunction.h"
@@ -89,7 +88,7 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
             if (!isVariableName(varName, syntaxHolder))
                 throw runtime_error("Invalid variable name: " + varName);
 
-            i += 2; // Skip 'var' and '='
+            i += 2; //skip 'var' and '='
             double value = evaluateExpression(vector<string>(tokens.begin() + i + 1, tokens.end()), syntaxHolder, suppressOutput);
             variables[varName] = value;
             suppressOutput = true;
@@ -101,7 +100,7 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
             if (!isVariableName(varName, syntaxHolder))
                 throw runtime_error("Invalid variable name: " + varName);
 
-            i += 1; // Skip '='
+            i += 1; //skip '='
             double value = evaluateExpression(vector<string>(tokens.begin() + i + 1, tokens.end()), syntaxHolder, suppressOutput);
             variables[varName] = value;
             suppressOutput = true;
