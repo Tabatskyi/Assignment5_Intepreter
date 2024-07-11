@@ -73,6 +73,36 @@ static vector<string> tokenize(const string& input)
     return tokens;
 }
 
+static void evaluateFunction(stack<string>& ops, stack<double>& values, SyntaxHolder& syntaxHolder)
+{
+    auto op = ops.top();
+    ops.pop();
+    if (op == "abs")
+    {
+        double val = values.top();
+        values.pop();
+        values.push(syntaxHolder.functionsMap[op]->Execute(val));
+        return;
+    }
+    else if (op == "=")
+    {
+        double val = values.top();
+        values.pop();
+        string varName = ops.top();
+        ops.pop();
+        variables[varName] = val;
+        values.push(val);
+    }
+    else
+    {
+        double val2 = values.top();
+        values.pop();
+        double val1 = values.top();
+        values.pop();
+        values.push(syntaxHolder.functionsMap[op]->Execute(val1, val2));
+    }
+}
+
 static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syntaxHolder, bool& suppressOutput)
 {
     stack<double> values;
@@ -127,45 +157,15 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
         else if (token == ")")
         {
             while (!ops.empty() && ops.top() != "(")
-            {
-                auto op = ops.top();
-                ops.pop();
-                if (op == "abs")
-                {
-                    double val = values.top();
-                    values.pop();
-                    values.push(syntaxHolder.functionsMap[op]->Execute(val));
-                    continue;
-                }
-                double val2 = values.top();
-                values.pop();
-                double val1 = values.top();
-                values.pop();
-
-                values.push(syntaxHolder.functionsMap[op]->Execute(val1, val2));
-            }
+                evaluateFunction(ops, values, syntaxHolder);
+            
             ops.pop();
         }
         else if (syntaxHolder.functionsMap.find(token) != syntaxHolder.functionsMap.end())
         {
             while (!ops.empty() && syntaxHolder.priority[ops.top()] >= syntaxHolder.priority[token])
-            {
-                auto op = ops.top();
-                ops.pop();
-                if (op == "abs")
-                {
-                    double val = values.top();
-                    values.pop();
-                    values.push(syntaxHolder.functionsMap[op]->Execute(val));
-                    continue;
-                }
-                double val2 = values.top();
-                values.pop();
-                double val1 = values.top();
-                values.pop();
-
-                values.push(syntaxHolder.functionsMap[op]->Execute(val1, val2));
-            }
+                evaluateFunction(ops, values, syntaxHolder);
+            
             ops.push(token);
         }
         else
@@ -175,34 +175,8 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
     }
 
     while (!ops.empty())
-    {
-        auto op = ops.top();
-        ops.pop();
-        if (op == "abs")
-        {
-            double val = values.top();
-            values.pop();
-            values.push(syntaxHolder.functionsMap[op]->Execute(val));
-            continue;
-        }
-        else if (op == "=")
-        {
-            double val = values.top();
-            values.pop();
-            string varName = ops.top();
-            ops.pop();
-            variables[varName] = val;
-            values.push(val);
-        }
-        else
-        {
-            double val2 = values.top();
-            values.pop();
-            double val1 = values.top();
-            values.pop();
-            values.push(syntaxHolder.functionsMap[op]->Execute(val1, val2));
-        }
-    }
+        evaluateFunction(ops, values, syntaxHolder);
+    
 
     return values.top();
 }
