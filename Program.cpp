@@ -82,7 +82,7 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
     {
         const string& token = tokens[i];
 
-        if (token == "var" && i + 2 < tokens.size() && tokens[i + 2] == "=")
+        if (token == syntaxHolder.variableDefinition && i + 2 < tokens.size() && tokens[i + 2] == "=")
         {
             string varName = tokens[i + 1];
             if (!isVariableName(varName, syntaxHolder))
@@ -130,6 +130,13 @@ static double evaluateExpression(const vector<string>& tokens, SyntaxHolder& syn
             {
                 auto op = ops.top();
                 ops.pop();
+                if (op == "abs")
+                {
+                    double val = values.top();
+                    values.pop();
+                    values.push(syntaxHolder.functionsMap[op]->Execute(val));
+                    continue;
+                }
                 double val2 = values.top();
                 values.pop();
                 double val1 = values.top();
